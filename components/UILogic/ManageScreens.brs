@@ -48,7 +48,7 @@ end sub
 function IsScreenAvailable(node as Object) as Boolean
     for each screen in m.screenstack
         result = screen.IsSameNode(node)
-        if reuslt = true
+        if result = true
             return true
         end if
     end for

@@ -1,6 +1,5 @@
 sub ShowVideoScreen(content as Object, itemIndex as Integer)
      m.videoPlayer = CreateObject("roSGNode", "Video") 
-    m.selectedIndex[1] = itemIndex
      
     if itemIndex <> 0
         numOfChildren = content.GetChildCount() 
@@ -39,6 +38,9 @@ sub OnChangeVideoVisibility()
         m.videoPlayer.content = invalid
         screen = m.screenStack.Peek()
         screen.SetFocus(true)
+        if m.selectedIndex = invalid
+            m.selectedIndex = [0, 0]
+        end if
         screen.jumpToItem = currentIndex + m.selectedIndex[1]
     end if
 end sub

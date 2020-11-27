@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component name="BaseScene" extends="Scene">
     <interface>
-        <field id="inputArgs" type="assocarray" onChange="OnInputDeepLinking" />
+        <field id="inputArgs" type="assocarray"  />
         <field id="launchArgs" type="assocarray" onChange="OnInputDeepLinking"  />
     </interface>
     <script type="text/brightscript" uri="BaseScene.brs" />

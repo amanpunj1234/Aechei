@@ -1,4 +1,4 @@
-function GetSupportedMediaTypes() as Object
+function GetSupportedMediaTypes() 
     return {
         "movie": "movies"
         "shortFormVideo": "shortFormVideos"
@@ -8,38 +8,34 @@ end function
 sub OnInputDeepLinking(event as Object)  
     args = event.getData()
     if args <> invalid and ValidateDeepLink(args) 
-        DeepLink(m.Grid.content, args.mediaType, args.contentId)
+        DeepLink(m.Grid.content, args.mediatype, args.contentid)
     end if
 end sub
 
+
 function ValidateDeepLink(args as Object) as Boolean
-    mediaType = args.mediaType
-    contentId = args.contentId
+    mediatype = args.mediatype
+    contentid = args.contentid
     types = GetSupportedMediaTypes()
-    return mediaType <> invalid and contentId <> invalid and types[mediaType] <> invalid
+    return mediatype <> invalid and contentid <> invalid and types[mediatype] <> invalid
  end function
 
- sub DeepLink(content as Object, mediaType as String, contentId as String)
-
-    playableItem = FindNodeById(content, contentId)
-    types = GetSupportedMediaTypes()
-    if playableItem <> invalid and playableItem.mediaType = types[mediaType]
+ sub DeepLink(content as Object, mediatype as String, contentid as String)
+    playableItem = FindNodeById(content, contentid)
+    if playableItem <> invalid 
         ClearScreen() 
-        if mediaType = "shortFormVideo" or mediaType = "movie"
-            HandlePlayableMediaTypes(playableItem)
+        if mediatype = "movie" or mediaType = "shortFormVideo"
+            PrepareDetailsScreen(playableItem)
         end if
     end if
 end sub
 
-sub HandlePlayableMediaTypes(content as Object)
-    PrepareDetailsScreen(content) 
-end sub
-
 sub PrepareDetailsScreen(content as Object)
-    m.deepLinkDetailsScreen = CreateObject("roSGNode", "DetailsScreen")
+    m.deepLinkDetailsScreen = CreateObject("roSGNode", "Detail")
     m.deepLinkDetailsScreen.content = content
     m.deepLinkDetailsScreen.ObserveField("visible", "OnDeepLinkDetailsScreenVisibilityChanged")
     m.deepLinkDetailsScreen.ObserveField("buttonSelected", "OnDeepLinkDetailsScreenButtonSelected")
+   
     AddScreen(m.deepLinkDetailsScreen)
 end sub
 
@@ -57,23 +53,34 @@ sub OnDeepLinkDetailsScreenVisibilityChanged(event as Object)
     end if
 end sub
 
-sub OnDeepLinkDetailsScreenButtonSelected(event as Object) 
-    buttonIndex = event.getData() 
+
+sub buttonSelectedOnDeeplink(event as object)
+    selectedIndex = event.GetData()
     details = event.GetRoSGNode()
-    button = details.buttons.getChild(buttonIndex)
-    content = m.deepLinkDetailsScreen.content.clone(true)
-    if button.id = "play"
+    content = m.deepLinkDetailsScreen.content
+    if selectedIndex[1] = 0  
         content.bookmarkPosition = 0
+        ShowVideoScreen(content, 0) 
     end if
 end sub
 
-function FindNodeById(content as Object, contentId as String) as Object
+sub OnDeepLinkDetailsScreenButtonSelected(event as Object)
+    buttonIndex = event.getData() 
+    details = event.GetRoSGNode()
+    content = m.deepLinkDetailsScreen.content.clone(true)
+    if buttonIndex = 0
+        content.bookmarkPosition = 0
+        ShowVideoScreen(content, 0) 
+    end if
+end sub
+
+function FindNodeById(content as Object, contentid as String) as Object
 
     for each element in content.getChildren(-1, 0)
-        if element.id = contentId
+        if element.id = contentid
             return element
         else if element.getChildCount() > 0
-            result = FindNodeById(element, contentId)
+            result = FindNodeById(element, contentid)
             if result <> invalid
                 return result
             end if

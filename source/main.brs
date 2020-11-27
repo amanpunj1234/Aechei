@@ -1,5 +1,5 @@
 
-sub Main(args as Object) 
+sub Main(args as Object) as void
     ShowChannelRSGScreen(args)
 end sub
 
@@ -9,7 +9,7 @@ sub ShowChannelRSGScreen(args as Object)
     screen.SetMessagePort(m.port)
     scene = screen.CreateScene("BaseScene")
     screen.Show() 
-    scene.launchArgs = args
+    scene.inputArgs = args
     inputObject=createobject("roInput")
     inputObject.setmessageport(m.port)
 
@@ -21,13 +21,12 @@ sub ShowChannelRSGScreen(args as Object)
             if msg.IsScreenClosed() then return
         else if msgType = "roInputEvent"
             inputData = msg.getInfo()
-            ? "input"
-            if inputData.DoesExist("mediaType") and inputData.DoesExist("contentId")
+            if inputData.DoesExist("mediatype") and inputData.DoesExist("contentid")
                 deeplink = {
-                    contentId: inputData.contentID
-                    mediaType: inputData.mediaType
+                    contentId: inputData.contentid
+                    mediaType: inputData.mediatype
                 }
-                scene.inputArgs = deeplink
+                scene.launchArgs = deeplink
             end if
         end if
     end while
