@@ -1,4 +1,4 @@
-APPNAME =  Aechei USA 
+APPNAME =  rokuCodeTest  
 ZIP_EXCLUDE= -x keys\* -x store_assets\*
 APPSROOT = ../..
 
